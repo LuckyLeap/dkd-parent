@@ -6,10 +6,7 @@ import com.dkd.common.annotation.Excel;
 import com.dkd.common.core.domain.BaseEntity;
 
 /**
- * 点位管理对象 tb_node
- * 
- * @author eden
- * @date 2025-04-01
+ * 点位管理对象 tb_node1
  */
 public class Node extends BaseEntity
 {

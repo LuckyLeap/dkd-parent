@@ -2,6 +2,8 @@ package com.dkd.manage.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.dkd.manage.domain.vo.RegionVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,16 +25,17 @@ import com.dkd.common.core.page.TableDataInfo;
 
 /**
  * 区域管理Controller
- * 
- * @author eden
- * @date 2025-04-01
  */
 @RestController
 @RequestMapping("/manage/region")
 public class RegionController extends BaseController
 {
+
+    private final IRegionService regionService;
     @Autowired
-    private IRegionService regionService;
+    public RegionController(IRegionService regionService) {
+        this.regionService = regionService;
+    }
 
     /**
      * 查询区域管理列表
@@ -42,8 +45,8 @@ public class RegionController extends BaseController
     public TableDataInfo list(Region region)
     {
         startPage();
-        List<Region> list = regionService.selectRegionList(region);
-        return getDataTable(list);
+        List<RegionVo> voList = regionService.selectRegionVoList(region);
+        return getDataTable(voList);
     }
 
     /**
@@ -55,7 +58,7 @@ public class RegionController extends BaseController
     public void export(HttpServletResponse response, Region region)
     {
         List<Region> list = regionService.selectRegionList(region);
-        ExcelUtil<Region> util = new ExcelUtil<Region>(Region.class);
+        ExcelUtil<Region> util = new ExcelUtil<>(Region.class);
         util.exportExcel(response, list, "区域管理数据");
     }
 

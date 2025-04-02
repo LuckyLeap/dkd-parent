@@ -2,6 +2,8 @@ package com.dkd.manage.service.impl;
 
 import java.util.List;
 import com.dkd.common.utils.DateUtils;
+import com.dkd.common.utils.SecurityUtils;
+import com.dkd.manage.domain.vo.PartnerVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dkd.manage.mapper.PartnerMapper;
@@ -10,19 +12,21 @@ import com.dkd.manage.service.IPartnerService;
 
 /**
  * 合作商管理Service业务层处理
- * 
- * @author eden
- * @date 2025-04-01
  */
 @Service
 public class PartnerServiceImpl implements IPartnerService 
 {
+
+    private final PartnerMapper partnerMapper;
     @Autowired
-    private PartnerMapper partnerMapper;
+    public PartnerServiceImpl(PartnerMapper partnerMapper)
+    {
+        this.partnerMapper = partnerMapper;
+    }
 
     /**
      * 查询合作商管理
-     * 
+     *
      * @param id 合作商管理主键
      * @return 合作商管理
      */
@@ -34,7 +38,7 @@ public class PartnerServiceImpl implements IPartnerService
 
     /**
      * 查询合作商管理列表
-     * 
+     *
      * @param partner 合作商管理
      * @return 合作商管理
      */
@@ -53,6 +57,8 @@ public class PartnerServiceImpl implements IPartnerService
     @Override
     public int insertPartner(Partner partner)
     {
+        // 使用springSecurity工具类，对前端传递过来的密码进行加密
+        partner.setPassword(SecurityUtils.encryptPassword(partner.getPassword()));
         partner.setCreateTime(DateUtils.getNowDate());
         return partnerMapper.insertPartner(partner);
     }
@@ -92,5 +98,17 @@ public class PartnerServiceImpl implements IPartnerService
     public int deletePartnerById(Long id)
     {
         return partnerMapper.deletePartnerById(id);
+    }
+
+    /**
+     * 根据条件分页查询合作商管理
+     *
+     * @param partner 合作商管理
+     * @return 合作商管理
+     */
+    @Override
+    public List<PartnerVo> selectPartnerVoList(Partner partner)
+    {
+        return partnerMapper.selectPartnerVoList(partner);
     }
 }

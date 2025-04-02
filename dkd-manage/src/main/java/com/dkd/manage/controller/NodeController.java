@@ -23,9 +23,6 @@ import com.dkd.common.core.page.TableDataInfo;
 
 /**
  * 点位管理Controller
- * 
- * @author eden
- * @date 2025-04-01
  */
 @RestController
 @RequestMapping("/manage/node")

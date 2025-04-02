@@ -25,11 +25,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPartnerList" parameterType="Partner" resultMap="PartnerResult">
         <include refid="selectPartnerVo"/>
-        <where>  
-            <if test="partnerName != null  and partnerName != ''"> and partner_name like concat('%', #{partnerName}, '%')</if>
+        <where>
+            <if test="partnerName != null and partnerName != ''">and partner_name like concat('%', #{partnerName},'%')</if>
         </where>
     </select>
-    
+
     <select id="selectPartnerById" parameterType="Long" resultMap="PartnerResult">
         <include refid="selectPartnerVo"/>
         where id = #{id}
@@ -93,4 +93,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectPartnerVoList" resultType="com.dkd.manage.domain.vo.PartnerVo">
+        SELECT p.*, COUNT(n.id) AS node_count FROM tb_partner p
+        LEFT JOIN tb_node n ON p.id = n.partner_id
+        <where>
+            <if test="partnerName != null  and partnerName != ''">and partner_name like concat('%', #{partnerName},'%')</if>
+        </where>
+        GROUP BY p.id
+    </select>
 </mapper>

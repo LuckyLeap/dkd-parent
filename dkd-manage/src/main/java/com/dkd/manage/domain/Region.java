@@ -7,9 +7,6 @@ import com.dkd.common.core.domain.BaseEntity;
 
 /**
  * 区域管理对象 tb_region
- * 
- * @author eden
- * @date 2025-04-01
  */
 public class Region extends BaseEntity
 {

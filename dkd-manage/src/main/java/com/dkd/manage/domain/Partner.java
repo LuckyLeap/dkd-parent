@@ -7,9 +7,6 @@ import com.dkd.common.core.domain.BaseEntity;
 
 /**
  * 合作商管理对象 tb_partner
- * 
- * @author eden
- * @date 2025-04-01
  */
 public class Partner extends BaseEntity
 {

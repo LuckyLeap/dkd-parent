@@ -5,9 +5,6 @@ import com.dkd.manage.domain.Node;
 
 /**
  * 点位管理Mapper接口
- * 
- * @author eden
- * @date 2025-04-01
  */
 public interface NodeMapper 
 {
@@ -17,7 +14,7 @@ public interface NodeMapper
      * @param id 点位管理主键
      * @return 点位管理
      */
-    public Node selectNodeById(Long id);
+    Node selectNodeById(Long id);
 
     /**
      * 查询点位管理列表
@@ -25,7 +22,7 @@ public interface NodeMapper
      * @param node 点位管理
      * @return 点位管理集合
      */
-    public List<Node> selectNodeList(Node node);
+    List<Node> selectNodeList(Node node);
 
     /**
      * 新增点位管理
@@ -33,7 +30,7 @@ public interface NodeMapper
      * @param node 点位管理
      * @return 结果
      */
-    public int insertNode(Node node);
+    int insertNode(Node node);
 
     /**
      * 修改点位管理
@@ -41,7 +38,7 @@ public interface NodeMapper
      * @param node 点位管理
      * @return 结果
      */
-    public int updateNode(Node node);
+    int updateNode(Node node);
 
     /**
      * 删除点位管理
@@ -49,7 +46,7 @@ public interface NodeMapper
      * @param id 点位管理主键
      * @return 结果
      */
-    public int deleteNodeById(Long id);
+    int deleteNodeById(Long id);
 
     /**
      * 批量删除点位管理
@@ -57,5 +54,5 @@ public interface NodeMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteNodeByIds(Long[] ids);
+    int deleteNodeByIds(Long[] ids);
 }
