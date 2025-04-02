@@ -3,6 +3,7 @@ package com.dkd.framework.web.exception;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -36,6 +37,17 @@ public class GlobalExceptionHandler
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',权限校验失败'{}'", requestURI, e.getMessage());
         return AjaxResult.error(HttpStatus.FORBIDDEN, "没有权限，请联系管理员授权");
+    }
+
+    /**
+     * 数据完整性异常
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public AjaxResult handelDataIntegrityViolationException(DataIntegrityViolationException e) {
+        if (e.getMessage() != null && e.getMessage().contains("foreign")) {
+            return AjaxResult.error("无法删除，有其他数据引用");
+        }
+        return AjaxResult.error("您的操作违反了数据库中的完整性约束");
     }
 
     /**

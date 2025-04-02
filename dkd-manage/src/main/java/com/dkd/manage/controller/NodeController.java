@@ -2,6 +2,8 @@ package com.dkd.manage.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.dkd.manage.domain.vo.NodeVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +30,13 @@ import com.dkd.common.core.page.TableDataInfo;
 @RequestMapping("/manage/node")
 public class NodeController extends BaseController
 {
+
+    private final INodeService nodeService;
     @Autowired
-    private INodeService nodeService;
+    public NodeController(INodeService nodeService)
+    {
+        this.nodeService = nodeService;
+    }
 
     /**
      * 查询点位管理列表
@@ -39,8 +46,8 @@ public class NodeController extends BaseController
     public TableDataInfo list(Node node)
     {
         startPage();
-        List<Node> list = nodeService.selectNodeList(node);
-        return getDataTable(list);
+        List<NodeVo> voList = nodeService.selectNodeVoList(node);
+        return getDataTable(voList);
     }
 
     /**
