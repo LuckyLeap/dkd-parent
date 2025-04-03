@@ -9,15 +9,16 @@ import com.dkd.manage.service.IVmTypeService;
 
 /**
  * 设备类型管理Service业务层处理
- * 
- * @author eden
- * @date 2025-04-03
  */
 @Service
 public class VmTypeServiceImpl implements IVmTypeService 
 {
+    private final VmTypeMapper vmTypeMapper;
     @Autowired
-    private VmTypeMapper vmTypeMapper;
+    public VmTypeServiceImpl(VmTypeMapper vmTypeMapper)
+    {
+        this.vmTypeMapper = vmTypeMapper;
+    }
 
     /**
      * 查询设备类型管理

@@ -10,15 +10,16 @@ import com.dkd.manage.service.IChannelService;
 
 /**
  * 售货机货道Service业务层处理
- * 
- * @author ende
- * @date 2025-04-03
  */
 @Service
 public class ChannelServiceImpl implements IChannelService 
 {
+    private final ChannelMapper channelMapper;
     @Autowired
-    private ChannelMapper channelMapper;
+    public ChannelServiceImpl(ChannelMapper channelMapper)
+    {
+        this.channelMapper = channelMapper;
+    }
 
     /**
      * 查询售货机货道
@@ -92,5 +93,15 @@ public class ChannelServiceImpl implements IChannelService
     public int deleteChannelById(Long id)
     {
         return channelMapper.deleteChannelById(id);
+    }
+
+    /**
+     * 批量新增售货机货道
+     * @param channelList 售货机货道集合
+     * @return 结果
+     */
+    @Override
+    public int batchInsertChannel(List<Channel> channelList) {
+        return channelMapper.batchInsertChannel(channelList);
     }
 }
