@@ -17,7 +17,7 @@ import com.dkd.common.utils.DateUtils;
 
 /**
  * 反射工具类. 提供调用getter/setter方法, 访问私有变量, 调用私有方法, 获取泛型类型Class, 被AOP过的真实类等工具函数.
- * 
+ *
  * @author ruoyi
  */
 @SuppressWarnings("rawtypes")
@@ -29,7 +29,7 @@ public class ReflectUtils
 
     private static final String CGLIB_CLASS_SEPARATOR = "$$";
 
-    private static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
 
     /**
      * 调用Getter方法.
@@ -79,7 +79,7 @@ public class ReflectUtils
         Field field = getAccessibleField(obj, fieldName);
         if (field == null)
         {
-            logger.debug("在 [" + obj.getClass() + "] 中，没有找到 [" + fieldName + "] 字段 ");
+            logger.debug("在 [{}] 中，没有找到 [{}] 字段 ", obj.getClass(), fieldName);
             return null;
         }
         E result = null;
@@ -89,7 +89,7 @@ public class ReflectUtils
         }
         catch (IllegalAccessException e)
         {
-            logger.error("不可能抛出的异常{}", e.getMessage());
+            logger.error("不可能抛出的异常: {}", e.getMessage(), e);
         }
         return result;
     }
@@ -102,8 +102,7 @@ public class ReflectUtils
         Field field = getAccessibleField(obj, fieldName);
         if (field == null)
         {
-            // throw new IllegalArgumentException("在 [" + obj.getClass() + "] 中，没有找到 [" + fieldName + "] 字段 ");
-            logger.debug("在 [" + obj.getClass() + "] 中，没有找到 [" + fieldName + "] 字段 ");
+            logger.debug("在 [{}] 中，没有找到 [{}] 字段 ", obj.getClass(), fieldName);
             return;
         }
         try
@@ -112,7 +111,7 @@ public class ReflectUtils
         }
         catch (IllegalAccessException e)
         {
-            logger.error("不可能抛出的异常: {}", e.getMessage());
+            logger.error("不可能抛出的异常: {}", e.getMessage(), e);
         }
     }
 
@@ -132,7 +131,7 @@ public class ReflectUtils
         Method method = getAccessibleMethod(obj, methodName, parameterTypes);
         if (method == null)
         {
-            logger.debug("在 [" + obj.getClass() + "] 中，没有找到 [" + methodName + "] 方法 ");
+            logger.debug("在 [{}] 中，没有找到 [{}] 方法 ", obj.getClass(), methodName);
             return null;
         }
         try
@@ -141,7 +140,7 @@ public class ReflectUtils
         }
         catch (Exception e)
         {
-            String msg = "method: " + method + ", obj: " + obj + ", args: " + args + "";
+            String msg = "方法: " + method + ", 对象: " + obj + ", 参数: " + args;
             throw convertReflectionExceptionToUnchecked(msg, e);
         }
     }
@@ -157,8 +156,7 @@ public class ReflectUtils
         Method method = getAccessibleMethodByName(obj, methodName, args.length);
         if (method == null)
         {
-            // 如果为空不报错，直接返回空。
-            logger.debug("在 [" + obj.getClass() + "] 中，没有找到 [" + methodName + "] 方法 ");
+            logger.debug("在 [{}] 中，没有找到 [{}] 方法 ", obj.getClass(), methodName);
             return null;
         }
         try
@@ -214,7 +212,7 @@ public class ReflectUtils
         }
         catch (Exception e)
         {
-            String msg = "method: " + method + ", obj: " + obj + ", args: " + args + "";
+            String msg = "方法: " + method + ", 对象: " + obj + ", 参数: " + args;
             throw convertReflectionExceptionToUnchecked(msg, e);
         }
     }
@@ -230,7 +228,7 @@ public class ReflectUtils
         {
             return null;
         }
-        Validate.notBlank(fieldName, "fieldName can't be blank");
+        Validate.notBlank(fieldName, "fieldName 不能为空");
         for (Class<?> superClass = obj.getClass(); superClass != Object.class; superClass = superClass.getSuperclass())
         {
             try
@@ -261,7 +259,7 @@ public class ReflectUtils
         {
             return null;
         }
-        Validate.notBlank(methodName, "methodName can't be blank");
+        Validate.notBlank(methodName, "methodName 不能为空");
         for (Class<?> searchType = obj.getClass(); searchType != Object.class; searchType = searchType.getSuperclass())
         {
             try
@@ -291,7 +289,7 @@ public class ReflectUtils
         {
             return null;
         }
-        Validate.notBlank(methodName, "methodName can't be blank");
+        Validate.notBlank(methodName, "methodName 不能为空");
         for (Class<?> searchType = obj.getClass(); searchType != Object.class; searchType = searchType.getSuperclass())
         {
             Method[] methods = searchType.getDeclaredMethods();
@@ -351,7 +349,7 @@ public class ReflectUtils
 
         if (!(genType instanceof ParameterizedType))
         {
-            logger.debug(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+            logger.debug("{} 的父类不是 ParameterizedType", clazz.getSimpleName());
             return Object.class;
         }
 
@@ -359,13 +357,12 @@ public class ReflectUtils
 
         if (index >= params.length || index < 0)
         {
-            logger.debug("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
-                    + params.length);
+            logger.debug("索引: {}, {} 的 Parameterized Type 的大小: {}", index, clazz.getSimpleName(), params.length);
             return Object.class;
         }
         if (!(params[index] instanceof Class))
         {
-            logger.debug(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+            logger.debug("{} 没有在父类泛型参数中设置实际的 Class 类型", clazz.getSimpleName());
             return Object.class;
         }
 
@@ -376,7 +373,7 @@ public class ReflectUtils
     {
         if (instance == null)
         {
-            throw new RuntimeException("Instance must not be null");
+            throw new RuntimeException("实例不能为空");
         }
         Class clazz = instance.getClass();
         if (clazz != null && clazz.getName().contains(CGLIB_CLASS_SEPARATOR))

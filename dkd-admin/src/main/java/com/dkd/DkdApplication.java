@@ -1,5 +1,6 @@
 package com.dkd;
 
+import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * 启动程序
  * @author ruoyi
  */
+@EnableFileStorage // 启用文件存储功能
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class DkdApplication
 {
