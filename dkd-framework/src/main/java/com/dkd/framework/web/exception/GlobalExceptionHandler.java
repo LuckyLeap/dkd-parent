@@ -44,10 +44,16 @@ public class GlobalExceptionHandler
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public AjaxResult handelDataIntegrityViolationException(DataIntegrityViolationException e) {
-        if (e.getMessage() != null && e.getMessage().contains("foreign")) {
+        if (e.getMessage() == null){
+            return AjaxResult.error("数据完整性异常，请联系管理员");
+        }
+        if (e.getMessage().contains("foreign")) {
             return AjaxResult.error("无法删除，有其他数据引用");
         }
-        return AjaxResult.error("您的操作违反了数据库中的完整性约束");
+        if(e.getMessage().contains("Duplicate")){
+            return AjaxResult.error("无法保存，名称已存在");
+        }
+        return AjaxResult.error("数据完整性异常，请联系管理员");
     }
 
     /**

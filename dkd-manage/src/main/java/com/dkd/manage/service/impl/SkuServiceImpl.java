@@ -1,7 +1,10 @@
 package com.dkd.manage.service.impl;
 
 import java.util.List;
+
+import com.dkd.common.exception.ServiceException;
 import com.dkd.common.utils.DateUtils;
+import com.dkd.manage.service.IChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dkd.manage.mapper.SkuMapper;
@@ -15,10 +18,12 @@ import com.dkd.manage.service.ISkuService;
 public class SkuServiceImpl implements ISkuService 
 {
     private final SkuMapper skuMapper;
+    private final IChannelService channelService;
     @Autowired
-    public SkuServiceImpl(SkuMapper skuMapper)
+    public SkuServiceImpl(SkuMapper skuMapper, IChannelService channelService)
     {
         this.skuMapper = skuMapper;
+        this.channelService = channelService;
     }
 
     /**
@@ -73,13 +78,18 @@ public class SkuServiceImpl implements ISkuService
 
     /**
      * 批量删除商品管理
-     * 
+     *
      * @param skuIds 需要删除的商品管理主键
      * @return 结果
      */
     @Override
     public int deleteSkuBySkuIds(Long[] skuIds)
-    {
+    {   //1. 判断商品的id集合是否有关联货道
+        int count = channelService.countChannelBySkuIds(skuIds);
+        if(count>0){
+            throw new ServiceException("此商品被货道关联，无法删除");
+        }
+        //2. 没有关联货道才能删除
         return skuMapper.deleteSkuBySkuIds(skuIds);
     }
 
@@ -93,5 +103,15 @@ public class SkuServiceImpl implements ISkuService
     public int deleteSkuBySkuId(Long skuId)
     {
         return skuMapper.deleteSkuBySkuId(skuId);
+    }
+
+    /**
+     * 批量新增商品管理
+     * @param skuList 商品管理集合
+     * @return 结果
+     */
+    @Override
+    public int insertSkus(List<Sku> skuList) {
+        return skuMapper.insertSkus(skuList);
     }
 }
