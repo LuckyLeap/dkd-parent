@@ -2,6 +2,7 @@ package com.dkd.manage.mapper;
 
 import java.util.List;
 import com.dkd.manage.domain.Task;
+import com.dkd.manage.domain.vo.TaskVo;
 
 /**
  * 工单Mapper接口
@@ -55,4 +56,12 @@ public interface TaskMapper
      * @return 结果
      */
     int deleteTaskByTaskIds(Long[] taskIds);
+
+    /**
+     * 查询运维工单列表
+     *
+     * @param task 运维工单
+     * @return TaskVo集合
+     */
+    List<TaskVo> selectTaskVoList(Task task);
 }

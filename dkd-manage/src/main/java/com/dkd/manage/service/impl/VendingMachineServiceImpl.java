@@ -151,4 +151,15 @@ public class VendingMachineServiceImpl implements IVendingMachineService
     {
         return vendingMachineMapper.deleteVendingMachineById(id);
     }
+
+    /**
+     * 根据设备编号查询设备信息
+     *
+     * @param innerCode 设备编号
+     * @return VendingMachine
+     */
+    @Override
+    public VendingMachine selectVendingMachineByInnerCode(String innerCode) {
+        return vendingMachineMapper.selectVendingMachineByInnerCode(innerCode);
+    }
 }
