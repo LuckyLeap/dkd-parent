@@ -61,7 +61,7 @@ public class EmpController extends BaseController
     public void export(HttpServletResponse response, Emp emp)
     {
         List<Emp> list = empService.selectEmpList(emp);
-        ExcelUtil<Emp> util = new ExcelUtil<Emp>(Emp.class);
+        ExcelUtil<Emp> util = new ExcelUtil<>(Emp.class);
         util.exportExcel(response, list, "人员列表数据");
     }
 
@@ -124,6 +124,25 @@ public class EmpController extends BaseController
         empParam.setRegionId(vm.getRegionId());// 设备所属区域
         empParam.setStatus(DkdContants.EMP_STATUS_NORMAL);// 员工启用
         empParam.setRoleCode(DkdContants.ROLE_CODE_BUSINESS);// 角色编码：运营员
+        return success(empService.selectEmpList(empParam));
+    }
+
+    /**
+     * 根据售货机获取运维人员列表
+     */
+    @PreAuthorize("@ss.hasPermi('manage:emp:list')")
+    @GetMapping("/operationList/{innerCode}")
+    public AjaxResult getOperationList(@PathVariable("innerCode") String innerCode) {
+        // 1.查询售货机信息
+        VendingMachine vm = vendingMachineService.selectVendingMachineByInnerCode(innerCode);
+        if (vm == null) {
+            return error("售货机不存在");
+        }
+        // 2.根据区域id、角色编号、状态查询运维人员列表
+        Emp empParam = new Emp();
+        empParam.setRegionId(vm.getRegionId());// 设备所属区域
+        empParam.setStatus(DkdContants.EMP_STATUS_NORMAL);// 员工启用
+        empParam.setRoleCode(DkdContants.ROLE_CODE_OPERATOR);// 角色编码：维修员
         return success(empService.selectEmpList(empParam));
     }
 }

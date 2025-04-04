@@ -55,7 +55,7 @@ public class TaskDetailsController extends BaseController
     public void export(HttpServletResponse response, TaskDetails taskDetails)
     {
         List<TaskDetails> list = taskDetailsService.selectTaskDetailsList(taskDetails);
-        ExcelUtil<TaskDetails> util = new ExcelUtil<TaskDetails>(TaskDetails.class);
+        ExcelUtil<TaskDetails> util = new ExcelUtil<>(TaskDetails.class);
         util.exportExcel(response, list, "工单详情数据");
     }
 
@@ -100,5 +100,16 @@ public class TaskDetailsController extends BaseController
     public AjaxResult remove(@PathVariable Long[] detailsIds)
     {
         return toAjax(taskDetailsService.deleteTaskDetailsByDetailsIds(detailsIds));
+    }
+
+    /**
+     * 查看工单补货详情
+     */
+    @PreAuthorize("@ss.hasPermi('manage:taskDetails:list')")
+    @GetMapping(value = "/byTaskId/{taskId}")
+    public AjaxResult byTaskId(@PathVariable("taskId") Long taskId) {
+        TaskDetails taskDetailsParam = new TaskDetails();
+        taskDetailsParam.setTaskId(taskId);
+        return success(taskDetailsService.selectTaskDetailsList(taskDetailsParam));
     }
 }

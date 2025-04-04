@@ -100,16 +100,4 @@ public class EmpServiceImpl implements IEmpService
     {
         return empMapper.deleteEmpByIds(ids);
     }
-
-    /**
-     * 删除人员列表信息
-     * 
-     * @param id 人员列表主键
-     * @return 结果
-     */
-    @Override
-    public int deleteEmpById(Long id)
-    {
-        return empMapper.deleteEmpById(id);
-    }
 }

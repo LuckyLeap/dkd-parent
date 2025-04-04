@@ -47,12 +47,4 @@ public interface IEmpService
      * @return 结果
      */
     int deleteEmpByIds(Long[] ids);
-
-    /**
-     * 删除人员列表信息
-     * 
-     * @param id 人员列表主键
-     * @return 结果
-     */
-    int deleteEmpById(Long id);
 }

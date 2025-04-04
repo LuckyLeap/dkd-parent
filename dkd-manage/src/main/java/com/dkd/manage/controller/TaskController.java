@@ -3,6 +3,7 @@ package com.dkd.manage.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dkd.manage.domain.dto.TaskDto;
 import com.dkd.manage.domain.vo.TaskVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class TaskController extends BaseController
     public void export(HttpServletResponse response, Task task)
     {
         List<Task> list = taskService.selectTaskList(task);
-        ExcelUtil<Task> util = new ExcelUtil<Task>(Task.class);
+        ExcelUtil<Task> util = new ExcelUtil<>(Task.class);
         util.exportExcel(response, list, "工单数据");
     }
 
@@ -70,17 +71,6 @@ public class TaskController extends BaseController
     public AjaxResult getInfo(@PathVariable("taskId") Long taskId)
     {
         return success(taskService.selectTaskByTaskId(taskId));
-    }
-
-    /**
-     * 新增工单
-     */
-    @PreAuthorize("@ss.hasPermi('manage:task:add')")
-    @Log(title = "工单", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody Task task)
-    {
-        return toAjax(taskService.insertTask(task));
     }
 
     /**
@@ -103,5 +93,28 @@ public class TaskController extends BaseController
     public AjaxResult remove(@PathVariable Long[] taskIds)
     {
         return toAjax(taskService.deleteTaskByTaskIds(taskIds));
+    }
+
+    /**
+     * 新增工单
+     */
+    @PreAuthorize("@ss.hasPermi('manage:task:add')")
+    @Log(title = "工单", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody TaskDto taskDto)
+    {
+        // 设置指派人（登录用户）id
+        taskDto.setAssignorId(getUserId());
+        return toAjax(taskService.insertTaskDto(taskDto));
+    }
+
+    /**
+     * 取消工单
+     */
+    @PreAuthorize("@ss.hasPermi('manage:task:edit')")
+    @Log(title = "工单", businessType = BusinessType.UPDATE)
+    @PutMapping("/cancel")
+    public AjaxResult cancelTask(@RequestBody Task task) {
+        return toAjax(taskService.cancelTask(task));
     }
 }
