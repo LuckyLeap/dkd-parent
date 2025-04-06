@@ -44,14 +44,6 @@ public interface ChannelMapper
     int updateChannel(Channel channel);
 
     /**
-     * 删除售货机货道
-     * 
-     * @param id 售货机货道主键
-     * @return 结果
-     */
-    int deleteChannelById(Long id);
-
-    /**
      * 批量删除售货机货道
      * 
      * @param ids 需要删除的数据主键集合

@@ -10,11 +10,14 @@ import lombok.Setter;
 public class ChannelVo extends Channel {
     // 商品
     private Sku sku;
+    // 销量字段
+    private Long sales;
 
     @Override
     public String toString() {
         return "ChannelVo{" +
                 "sku=" + sku +
+                ", sales=" + sales +
                 '}';
     }
 }

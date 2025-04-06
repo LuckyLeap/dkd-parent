@@ -59,7 +59,7 @@ public class ChannelController extends BaseController
     public void export(HttpServletResponse response, Channel channel)
     {
         List<Channel> list = channelService.selectChannelList(channel);
-        ExcelUtil<Channel> util = new ExcelUtil<Channel>(Channel.class);
+        ExcelUtil<Channel> util = new ExcelUtil<>(Channel.class);
         util.exportExcel(response, list, "售货机货道数据");
     }
 
@@ -107,12 +107,17 @@ public class ChannelController extends BaseController
     }
 
     /**
-     * 根据售货机编号查询货道列表
+     * 根据售货机编号查询货道列表（包含商品名称和销量）
      */
     @PreAuthorize("@ss.hasPermi('manage:channel:list')")
     @GetMapping("/list/{innerCode}")
     public AjaxResult listByInnerCode(@PathVariable("innerCode") String innerCode) {
         List<ChannelVo> voList = channelService.selectChannelVoListByInnerCode(innerCode);
+        // 计算销量：maxCapacity - currentCapacity
+        voList.forEach(vo -> {
+            long sales = vo.getMaxCapacity() - vo.getCurrentCapacity();
+            vo.setSales(sales); // 假设 ChannelVo 有 sales 字段
+        });
         return success(voList);
     }
 

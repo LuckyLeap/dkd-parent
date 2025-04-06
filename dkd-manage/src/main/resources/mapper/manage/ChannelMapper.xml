@@ -82,10 +82,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteChannelById" parameterType="Long">
-        delete from tb_channel where id = #{id}
-    </delete>
-
     <delete id="deleteChannelByIds" parameterType="String">
         delete from tb_channel where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
@@ -118,22 +114,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <resultMap type="ChannelVo" id="ChannelVoResult">
-        <result property="id"    column="id"    />
-        <result property="channelCode"    column="channel_code"    />
-        <result property="skuId"    column="sku_id"    />
-        <result property="vmId"    column="vm_id"    />
-        <result property="innerCode"    column="inner_code"    />
-        <result property="maxCapacity"    column="max_capacity"    />
-        <result property="currentCapacity"    column="current_capacity"    />
-        <result property="lastSupplyTime"    column="last_supply_time"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <association property="sku" javaType="Sku" column="sku_id" select="com.dkd.manage.mapper.SkuMapper.selectSkuBySkuId"/>
+        <!-- 基础字段映射 -->
+        <result property="id" column="id"/>
+        <result property="channelCode" column="channel_code"/>
+        <result property="skuId" column="sku_id"/>
+        <result property="vmId" column="vm_id"/>
+        <result property="innerCode" column="inner_code"/>
+        <result property="maxCapacity" column="max_capacity"/>
+        <result property="currentCapacity" column="current_capacity"/>
+        <result property="lastSupplyTime" column="last_supply_time"/>
+        <!-- 新增销量字段 -->
+        <result property="sales" column="sales"/>
+        <!-- 商品名称通过联表查询映射 -->
+        <association property="sku" javaType="Sku">
+            <result property="skuName" column="sku_name"/>
+        </association>
     </resultMap>
 
     <select id="selectChannelVoListByInnerCode" resultMap="ChannelVoResult">
-        <include refid="selectChannelVo"/>
-        where inner_code = #{innerCode}
+        SELECT
+        c.id,
+        c.channel_code,
+        c.sku_id,
+        c.vm_id,
+        c.inner_code,
+        c.max_capacity,
+        c.current_capacity,
+        (c.max_capacity - c.current_capacity) AS sales, <!-- 动态计算销量 -->
+        c.last_supply_time,
+        s.sku_name  <!-- 联表查询商品名称 -->
+        FROM
+        tb_channel c
+        LEFT JOIN
+        tb_sku s ON c.sku_id = s.sku_id
+        WHERE
+        c.inner_code = #{innerCode}
     </select>
 
     <update id="batchUpdateChannel" parameterType="java.util.List">

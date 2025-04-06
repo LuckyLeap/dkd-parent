@@ -51,14 +51,6 @@ public interface IChannelService
     int deleteChannelByIds(Long[] ids);
 
     /**
-     * 删除售货机货道信息
-     * 
-     * @param id 售货机货道主键
-     * @return 结果
-     */
-    int deleteChannelById(Long id);
-
-    /**
      * 批量新增售货机货道
      * @param channelList 售货机货道集合
      */

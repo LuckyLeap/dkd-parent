@@ -88,18 +88,6 @@ public class ChannelServiceImpl implements IChannelService
     }
 
     /**
-     * 删除售货机货道信息
-     * 
-     * @param id 售货机货道主键
-     * @return 结果
-     */
-    @Override
-    public int deleteChannelById(Long id)
-    {
-        return channelMapper.deleteChannelById(id);
-    }
-
-    /**
      * 批量新增售货机货道
      * @param channelList 售货机货道集合
      */
