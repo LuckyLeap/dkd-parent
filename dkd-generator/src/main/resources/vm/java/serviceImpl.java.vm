@@ -21,15 +21,16 @@ import ${packageName}.service.I${ClassName}Service;
 
 /**
  * ${functionName}Service业务层处理
- * 
- * @author ${author}
- * @date ${datetime}
  */
 @Service
 public class ${ClassName}ServiceImpl implements I${ClassName}Service 
 {
+    private final  ${ClassName}Mapper ${className}Mapper;
     @Autowired
-    private ${ClassName}Mapper ${className}Mapper;
+    public ${ClassName}ServiceImpl(${ClassName}Mapper ${className}Mapper)
+    {
+        this.${className}Mapper = ${className}Mapper;
+    }
 
     /**
      * 查询${functionName}
@@ -159,7 +160,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
                 ${subclassName}.set${subTableFkClassName}(${pkColumn.javaField});
                 list.add(${subclassName});
             }
-            if (list.size() > 0)
+            if (!list.isEmpty())
             {
                 ${className}Mapper.batch${subClassName}(list);
             }

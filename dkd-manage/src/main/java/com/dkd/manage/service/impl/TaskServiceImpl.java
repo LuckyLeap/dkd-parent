@@ -10,12 +10,11 @@ import cn.hutool.core.collection.CollUtil;
 import com.dkd.common.constant.DkdContants;
 import com.dkd.common.exception.ServiceException;
 import com.dkd.common.utils.DateUtils;
-import com.dkd.manage.domain.Emp;
-import com.dkd.manage.domain.TaskDetails;
-import com.dkd.manage.domain.VendingMachine;
+import com.dkd.manage.domain.*;
 import com.dkd.manage.domain.dto.TaskDetailsDto;
 import com.dkd.manage.domain.dto.TaskDto;
 import com.dkd.manage.domain.vo.TaskVo;
+import com.dkd.manage.mapper.TaskCollectMapper;
 import com.dkd.manage.service.IEmpService;
 import com.dkd.manage.service.ITaskDetailsService;
 import com.dkd.manage.service.IVendingMachineService;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import com.dkd.manage.mapper.TaskMapper;
-import com.dkd.manage.domain.Task;
 import com.dkd.manage.service.ITaskService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,13 +36,15 @@ public class TaskServiceImpl implements ITaskService
     private final IEmpService empService;
     private final ITaskDetailsService taskDetailsService;
     private final RedisTemplate redisTemplate;
+    private final TaskCollectMapper taskCollectMapper;
     @Autowired
-    public TaskServiceImpl(TaskMapper taskMapper, IVendingMachineService vendingMachineService, IEmpService empService, ITaskDetailsService taskDetailsService, RedisTemplate redisTemplate) {
+    public TaskServiceImpl(TaskMapper taskMapper, IVendingMachineService vendingMachineService, IEmpService empService, ITaskDetailsService taskDetailsService, RedisTemplate redisTemplate, TaskCollectMapper taskCollectMapper) {
         this.taskMapper = taskMapper;
         this.vendingMachineService = vendingMachineService;
         this.empService = empService;
         this.taskDetailsService = taskDetailsService;
         this.redisTemplate = redisTemplate;
+        this.taskCollectMapper = taskCollectMapper;
     }
 
     /**
@@ -142,9 +142,18 @@ public class TaskServiceImpl implements ITaskService
         task.setCreateTime(DateUtils.getNowDate());// 创建时间
         task.setTaskCode(generateTaskCode());// 工单编号
         int taskResult = taskMapper.insertTask(task);
-        //7. 判断是否为补货工单
+
+        //7.向工单统计表中新增一条记录
+        TaskCollect taskCollect = TaskCollect.builder()
+                .userId(task.getUserId())
+                .progressCount(1L)
+                .collectDate(DateUtils.getNowDate())
+                .build();
+        taskCollectMapper.insertOrUpdateTaskCollect(taskCollect);
+
+        //8. 判断是否为补货工单
         if (taskDto.getProductTypeId().equals(DkdContants.TASK_TYPE_SUPPLY)) {
-            // 8.保存工单详情
+            // 9.保存工单详情
             List<TaskDetailsDto> details = taskDto.getDetails();
             if (CollUtil.isEmpty(details)) {
                 throw new ServiceException("补货工单详情不能为空");
@@ -183,8 +192,18 @@ public class TaskServiceImpl implements ITaskService
         //2. 设置更新字段
         task.setTaskStatus(DkdContants.TASK_STATUS_CANCEL);// 工单状态：取消
         task.setUpdateTime(DateUtils.getNowDate());// 更新时间
-        //3. 更新工单
-        return taskMapper.updateTask(task);// 注意别传错了，这里是前端task参数
+
+        //3. 更新工单统计表
+        TaskCollect taskCollect = TaskCollect.builder()
+                .userId(taskDb.getUserId())
+                .progressCount(-1L)
+                .cancelCount(1L)
+                .collectDate(DateUtils.getNowDate())
+                .build();
+        taskCollectMapper.updateTaskCollect(taskCollect);
+
+        //4. 更新工单
+        return taskMapper.updateTask(task);
     }
 
     /**

@@ -8,9 +8,6 @@ import ${packageName}.domain.${subClassName};
 
 /**
  * ${functionName}Mapper接口
- * 
- * @author ${author}
- * @date ${datetime}
  */
 public interface ${ClassName}Mapper 
 {

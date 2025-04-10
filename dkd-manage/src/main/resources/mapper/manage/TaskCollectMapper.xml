@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkd.manage.mapper.TaskCollectMapper">
+    <sql id="selectTaskCollectVo">
+        select id, user_id, finish_count, progress_count, cancel_count, collect_date from tb_task_collect
+    </sql>
+
+    <select id="selectDailyDataById" parameterType="Long" resultMap="TaskCollectVoResult">
+        SELECT id, user_id, finish_count, progress_count, cancel_count, collect_date
+        FROM tb_task_collect
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectMonthlyCollectList" resultMap="TaskCollectVoResult">
+        SELECT
+        MAX(id) AS id,
+        user_id,
+        SUM(finish_count) AS finish_count,
+        SUM(progress_count) AS progress_count,
+        SUM(cancel_count) AS cancel_count,
+        MAX(collect_date) AS collect_date,
+        SUM(CASE WHEN collect_date BETWEEN #{startDate} AND CURDATE() THEN finish_count ELSE 0 END) AS finish_count_y,
+        SUM(CASE WHEN collect_date BETWEEN #{startDate} AND CURDATE() THEN progress_count ELSE 0 END) AS progress_count_y,
+        SUM(CASE WHEN collect_date BETWEEN #{startDate} AND CURDATE() THEN cancel_count ELSE 0 END) AS cancel_count_y,
+        SUM(finish_count) AS finish_count_s,
+        SUM(progress_count) AS progress_count_s,
+        SUM(cancel_count) AS cancel_count_s
+        FROM tb_task_collect
+        <where>
+            <if test="taskCollect.userId != null">
+                AND user_id = #{taskCollect.userId}
+            </if>
+            AND collect_date BETWEEN #{startDate} AND CURDATE()
+        </where>
+        GROUP BY user_id
+        ORDER BY collect_date DESC
+    </select>
+
+    <resultMap type="taskCollectVo" id="TaskCollectVoResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="finishCount"    column="finish_count"    />
+        <result property="progressCount"    column="progress_count"    />
+        <result property="cancelCount"    column="cancel_count"    />
+        <result property="collectDate"    column="collect_date"    />
+        <result property="finishCountY" column="finish_count_y" />
+        <result property="progressCountY" column="progress_count_y" />
+        <result property="cancelCountY" column="cancel_count_y" />
+        <result property="finishCountS" column="finish_count_s" />
+        <result property="progressCountS" column="progress_count_s" />
+        <result property="cancelCountS" column="cancel_count_s" />
+        <association property="emp" javaType="Emp" column="user_id"
+                     select="com.dkd.manage.mapper.EmpMapper.selectEmpById"/>
+    </resultMap>
+
+    <resultMap type="TaskCollect" id="TaskCollectResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="finishCount"    column="finish_count"    />
+        <result property="progressCount"    column="progress_count"    />
+        <result property="cancelCount"    column="cancel_count"    />
+        <result property="collectDate"    column="collect_date"    />
+    </resultMap>
+
+    <!-- 更新统计记录（增量更新） -->
+    <update id="updateTaskCollect" parameterType="TaskCollect">
+        UPDATE tb_task_collect
+        SET
+            finish_count = finish_count + #{finishCount},
+            progress_count = progress_count + #{progressCount},
+            cancel_count = cancel_count + #{cancelCount}
+        WHERE
+            user_id = #{userId}
+          AND collect_date = #{collectDate}
+    </update>
+
+    <select id="selectTaskCollectVoDetail" resultMap="TaskCollectVoResult">
+        SELECT
+            user_id,
+            SUM(finish_count) AS finish_count_s,
+            SUM(progress_count) AS progress_count_s,
+            SUM(cancel_count) AS cancel_count_s,
+            SUM(CASE WHEN collect_date BETWEEN #{startDate} AND CURDATE() THEN finish_count ELSE 0 END) AS finish_count_y,
+            SUM(CASE WHEN collect_date BETWEEN #{startDate} AND CURDATE() THEN progress_count ELSE 0 END) AS progress_count_y,
+            SUM(CASE WHEN collect_date BETWEEN #{startDate} AND CURDATE() THEN cancel_count ELSE 0 END) AS cancel_count_y
+        FROM tb_task_collect
+        WHERE user_id = #{userId}
+        GROUP BY user_id
+    </select>
+
+    <select id="selectByUserAndDate" resultMap="TaskCollectResult">
+        SELECT id, user_id, finish_count, progress_count, cancel_count, collect_date
+        FROM tb_task_collect
+        WHERE user_id = #{userId} AND collect_date = #{collectDate}
+        LIMIT 1
+    </select>
+
+    <insert id="insertOrUpdateTaskCollect">
+        INSERT INTO tb_task_collect(
+            user_id, finish_count, progress_count, cancel_count, collect_date
+        ) VALUES (
+            #{userId}, #{finishCount}, #{progressCount}, #{cancelCount}, #{collectDate}
+        )
+        ON DUPLICATE KEY UPDATE
+            finish_count = finish_count + VALUES(finish_count),
+            progress_count = progress_count + VALUES(progress_count),
+            cancel_count = cancel_count + VALUES(cancel_count)
+    </insert>
+</mapper>

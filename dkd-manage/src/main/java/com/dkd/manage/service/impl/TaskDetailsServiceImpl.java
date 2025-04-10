@@ -81,18 +81,6 @@ public class TaskDetailsServiceImpl implements ITaskDetailsService
     }
 
     /**
-     * 删除工单详情信息
-     * 
-     * @param detailsId 工单详情主键
-     * @return 结果
-     */
-    @Override
-    public int deleteTaskDetailsByDetailsId(Long detailsId)
-    {
-        return taskDetailsMapper.deleteTaskDetailsByDetailsId(detailsId);
-    }
-
-    /**
      * 批量新增工单详情
      * @param taskDetailsList 工单详情集合
      * @return 结果

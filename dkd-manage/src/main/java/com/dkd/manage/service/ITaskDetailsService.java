@@ -49,14 +49,6 @@ public interface ITaskDetailsService
     int deleteTaskDetailsByDetailsIds(Long[] detailsIds);
 
     /**
-     * 删除工单详情信息
-     * 
-     * @param detailsId 工单详情主键
-     * @return 结果
-     */
-    int deleteTaskDetailsByDetailsId(Long detailsId);
-
-    /**
      * 批量新增工单详情
      * @param taskDetailsList 工单详情集合
      * @return 结果

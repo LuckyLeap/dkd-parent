@@ -59,7 +59,7 @@ public class NodeController extends BaseController
     public void export(HttpServletResponse response, Node node)
     {
         List<Node> list = nodeService.selectNodeList(node);
-        ExcelUtil<Node> util = new ExcelUtil<Node>(Node.class);
+        ExcelUtil<Node> util = new ExcelUtil<>(Node.class);
         util.exportExcel(response, list, "点位管理数据");
     }
 

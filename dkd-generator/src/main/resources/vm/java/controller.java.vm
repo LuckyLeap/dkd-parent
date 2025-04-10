@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import com.dkd.common.annotation.Log;
 import com.dkd.common.core.controller.BaseController;
 import com.dkd.common.core.domain.AjaxResult;
@@ -26,20 +28,23 @@ import com.dkd.common.core.page.TableDataInfo;
 
 /**
  * ${functionName}Controller
- * 
- * @author ${author}
- * @date ${datetime}
  */
+@Api(tags = "${functionName}")
 @RestController
 @RequestMapping("/${moduleName}/${businessName}")
 public class ${ClassName}Controller extends BaseController
 {
+    private final I${ClassName}Service ${className}Service;
     @Autowired
-    private I${ClassName}Service ${className}Service;
+    public ${ClassName}Controller(I${ClassName}Service ${className}Service)
+    {
+        this.${className}Service = ${className}Service;
+    }
 
     /**
      * 查询${functionName}列表
      */
+    @ApiOperation("查询${functionName}列表")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @GetMapping("/list")
 #if($table.crud || $table.sub)
@@ -60,6 +65,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 导出${functionName}列表
      */
+    @ApiOperation("导出${functionName}列表")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:export')")
     @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -73,6 +79,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 获取${functionName}详细信息
      */
+    @ApiOperation("获取${functionName}详细信息")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:query')")
     @GetMapping(value = "/{${pkColumn.javaField}}")
     public AjaxResult getInfo(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
@@ -83,6 +90,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 新增${functionName}
      */
+    @ApiOperation("新增${functionName}")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:add')")
     @Log(title = "${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
@@ -94,6 +102,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 修改${functionName}
      */
+    @ApiOperation("修改${functionName}")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:edit')")
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -105,6 +114,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 删除${functionName}
      */
+    @ApiOperation("删除${functionName}")
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{${pkColumn.javaField}s}")

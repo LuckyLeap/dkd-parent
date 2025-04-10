@@ -47,19 +47,6 @@ public class TaskDetailsController extends BaseController
     }
 
     /**
-     * 导出工单详情列表
-     */
-    @PreAuthorize("@ss.hasPermi('manage:taskDetails:export')")
-    @Log(title = "工单详情", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, TaskDetails taskDetails)
-    {
-        List<TaskDetails> list = taskDetailsService.selectTaskDetailsList(taskDetails);
-        ExcelUtil<TaskDetails> util = new ExcelUtil<>(TaskDetails.class);
-        util.exportExcel(response, list, "工单详情数据");
-    }
-
-    /**
      * 获取工单详情详细信息
      */
     @PreAuthorize("@ss.hasPermi('manage:taskDetails:query')")

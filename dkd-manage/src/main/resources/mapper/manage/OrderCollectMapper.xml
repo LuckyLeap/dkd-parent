@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dkd.manage.mapper.OrderCollectMapper">
+    
+    <resultMap type="OrderCollect" id="OrderCollectResult">
+        <result property="id"    column="id"    />
+        <result property="partnerId"    column="partner_id"    />
+        <result property="partnerName"    column="partner_name"    />
+        <result property="orderTotalMoney"    column="order_total_money"    />
+        <result property="orderDate"    column="order_date"    />
+        <result property="totalBill"    column="total_bill"    />
+        <result property="nodeId"    column="node_id"    />
+        <result property="nodeName"    column="node_name"    />
+        <result property="orderCount"    column="order_count"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="regionName"    column="region_name"    />
+    </resultMap>
+
+    <sql id="selectOrderCollectVo">
+        select id, partner_id, partner_name, order_total_money, order_date, total_bill, node_id, node_name, order_count, ratio, region_name from tb_order_collect
+    </sql>
+
+    <select id="selectOrderCollectList" parameterType="OrderCollectQuery" resultMap="OrderCollectResult">
+        <include refid="selectOrderCollectVo"/>
+        <where>
+            <if test="partnerId != null "> and partner_id = #{partnerId}</if>
+            <if test="startDate != null">and order_date &gt;= #{startDate}</if>
+            <if test="endDate != null">and order_date &lt;= #{endDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderCollectById" parameterType="Long" resultMap="OrderCollectResult">
+        <include refid="selectOrderCollectVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderCollect" parameterType="OrderCollect">
+        insert into tb_order_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="partnerId != null">partner_id,</if>
+            <if test="partnerName != null">partner_name,</if>
+            <if test="orderTotalMoney != null">order_total_money,</if>
+            <if test="orderDate != null">order_date,</if>
+            <if test="totalBill != null">total_bill,</if>
+            <if test="nodeId != null">node_id,</if>
+            <if test="nodeName != null">node_name,</if>
+            <if test="orderCount != null">order_count,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="regionName != null and regionName != ''">region_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="partnerId != null">#{partnerId},</if>
+            <if test="partnerName != null">#{partnerName},</if>
+            <if test="orderTotalMoney != null">#{orderTotalMoney},</if>
+            <if test="orderDate != null">#{orderDate},</if>
+            <if test="totalBill != null">#{totalBill},</if>
+            <if test="nodeId != null">#{nodeId},</if>
+            <if test="nodeName != null">#{nodeName},</if>
+            <if test="orderCount != null">#{orderCount},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="regionName != null and regionName != ''">#{regionName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderCollect" parameterType="OrderCollect">
+        update tb_order_collect
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="partnerId != null">partner_id = #{partnerId},</if>
+            <if test="partnerName != null">partner_name = #{partnerName},</if>
+            <if test="orderTotalMoney != null">order_total_money = #{orderTotalMoney},</if>
+            <if test="orderDate != null">order_date = #{orderDate},</if>
+            <if test="totalBill != null">total_bill = #{totalBill},</if>
+            <if test="nodeId != null">node_id = #{nodeId},</if>
+            <if test="nodeName != null">node_name = #{nodeName},</if>
+            <if test="orderCount != null">order_count = #{orderCount},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="regionName != null and regionName != ''">region_name = #{regionName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderCollectByIds" parameterType="String">
+        delete from tb_order_collect where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectOrderCollectDto" parameterType="OrderCollectQuery" resultType="OrderCollectDto">
+        select partner_id, sum(order_total_money) as total_money, sum(total_bill) as total_bill, sum(order_count) as total_order_count
+        from tb_order_collect
+        <where>
+            <if test="partnerId != null">partner_id = #{partnerId}</if>
+            <if test="startDate != null">and order_date &gt;= #{startDate}</if>
+            <if test="endDate != null">and order_date &lt;= #{endDate}</if>
+        </where>
+        group by partner_id
+    </select>
+
+    <select id="selectDailyTurnoverList" parameterType="java.time.LocalDateTime" resultType="DailyTurnoverDto">
+        select order_date, sum(order_total_money) as sum , count(order_count) as count
+        from tb_order_collect
+        <where>
+            <if test="startDate != null">
+                AND order_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND order_date &lt;= #{endDate}
+            </if>
+        </where>
+        GROUP BY order_date
+    </select>
+</mapper>

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import com.dkd.common.annotation.Log;
 import com.dkd.common.core.controller.BaseController;
 import com.dkd.common.core.domain.AjaxResult;
@@ -28,6 +30,7 @@ import com.dkd.common.core.page.TableDataInfo;
 /**
  * 人员列表Controller
  */
+@Api(tags = "人员列表Controller")
 @RestController
 @RequestMapping("/manage/emp")
 public class EmpController extends BaseController
@@ -43,6 +46,7 @@ public class EmpController extends BaseController
     /**
      * 查询人员列表列表
      */
+    @ApiOperation("获取人员列表列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:list')")
     @GetMapping("/list")
     public TableDataInfo list(Emp emp)
@@ -55,6 +59,7 @@ public class EmpController extends BaseController
     /**
      * 导出人员列表列表
      */
+    @ApiOperation("导出人员列表列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:export')")
     @Log(title = "人员列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -68,6 +73,7 @@ public class EmpController extends BaseController
     /**
      * 获取人员列表详细信息
      */
+    @ApiOperation("获取人员列表详细信息")
     @PreAuthorize("@ss.hasPermi('manage:emp:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -78,6 +84,7 @@ public class EmpController extends BaseController
     /**
      * 新增人员列表
      */
+    @ApiOperation("新增人员列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:add')")
     @Log(title = "人员列表", businessType = BusinessType.INSERT)
     @PostMapping
@@ -89,6 +96,7 @@ public class EmpController extends BaseController
     /**
      * 修改人员列表
      */
+    @ApiOperation("修改人员列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:edit')")
     @Log(title = "人员列表", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -100,6 +108,7 @@ public class EmpController extends BaseController
     /**
      * 删除人员列表
      */
+    @ApiOperation("删除人员列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:remove')")
     @Log(title = "人员列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
@@ -111,6 +120,7 @@ public class EmpController extends BaseController
     /**
      * 根据售货机获取运营人员列表
      */
+    @ApiOperation("根据售货机获取运营人员列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:list')")
     @GetMapping("/businessList/{innerCode}")
     public AjaxResult businessList(@PathVariable("innerCode") String innerCode) {
@@ -130,6 +140,7 @@ public class EmpController extends BaseController
     /**
      * 根据售货机获取运维人员列表
      */
+    @ApiOperation("根据售货机获取运维人员列表")
     @PreAuthorize("@ss.hasPermi('manage:emp:list')")
     @GetMapping("/operationList/{innerCode}")
     public AjaxResult getOperationList(@PathVariable("innerCode") String innerCode) {
