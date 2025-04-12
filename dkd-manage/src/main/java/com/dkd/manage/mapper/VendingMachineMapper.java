@@ -2,6 +2,7 @@ package com.dkd.manage.mapper;
 
 import java.util.List;
 import com.dkd.manage.domain.VendingMachine;
+import com.dkd.manage.domain.dto.AbnormalDeviceDto;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -65,4 +66,9 @@ public interface VendingMachineMapper
      */
     @Select("select * from tb_vending_machine where inner_code=#{innerCode}")
     VendingMachine selectVendingMachineByInnerCode(String innerCode);
+
+    /**
+     * 查询异常设备列表
+     */
+    List<AbnormalDeviceDto> getAbnormalDeviceList();
 }

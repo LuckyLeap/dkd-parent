@@ -102,4 +102,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         GROUP BY p.id
     </select>
+
+    <select id="getPartnerSalesList" resultType="com.dkd.manage.domain.dto.PartnerNodeCountDto">
+        SELECT p.partner_name, COUNT(n.id) AS node_count
+        FROM tb_partner p
+        LEFT JOIN tb_node n ON p.id = n.partner_id
+        GROUP BY p.id
+        ORDER BY node_count DESC
+        LIMIT 0,5
+    </select>
 </mapper>

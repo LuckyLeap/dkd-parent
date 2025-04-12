@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVendingMachineVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertVendingMachine" parameterType="VendingMachine" useGeneratedKeys="true" keyProperty="id">
         insert into tb_vending_machine
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -124,4 +124,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="getAbnormalDeviceList" resultType="com.dkd.manage.domain.dto.AbnormalDeviceDto">
+        select update_time, inner_code, addr
+        from tb_vending_machine
+        where running_status is null
+        or running_status = ''
+        order by update_time
+    </select>
 </mapper>

@@ -9,6 +9,4 @@ public class DailyTurnoverDto {
     private LocalDate orderDate;
     //营业额
     private Double sum;
-    //订单量
-    private Long count;
 }

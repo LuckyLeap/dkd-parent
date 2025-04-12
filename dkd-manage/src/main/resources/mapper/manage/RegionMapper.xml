@@ -63,10 +63,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteRegionById" parameterType="Long">
-        delete from tb_region where id = #{id}
-    </delete>
-
     <delete id="deleteRegionByIds" parameterType="String">
         delete from tb_region where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">

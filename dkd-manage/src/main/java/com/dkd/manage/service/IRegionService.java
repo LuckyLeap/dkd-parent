@@ -50,14 +50,6 @@ public interface IRegionService
     int deleteRegionByIds(Long[] ids);
 
     /**
-     * 删除区域管理信息
-     * 
-     * @param id 区域管理主键
-     * @return 结果
-     */
-    int deleteRegionById(Long id);
-
-    /**
      * 查询区域管理列表
      *
      * @param region 区域管理

@@ -76,18 +76,6 @@ public class RegionServiceImpl implements IRegionService
     }
 
     /**
-     * 删除区域管理信息
-     * 
-     * @param id 区域管理主键
-     * @return 结果
-     */
-    @Override
-    public int deleteRegionById(Long id)
-    {
-        return regionMapper.deleteRegionById(id);
-    }
-
-    /**
      * 查询区域管理列表
      *
      * @param region 区域管理

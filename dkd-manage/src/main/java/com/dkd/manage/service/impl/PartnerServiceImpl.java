@@ -59,6 +59,7 @@ public class PartnerServiceImpl implements IPartnerService
     {
         // 使用springSecurity工具类，对前端传递过来的密码进行加密
         partner.setPassword(SecurityUtils.encryptPassword(partner.getPassword()));
+        partner.setCreateBy(SecurityUtils.getUsername());
         partner.setCreateTime(DateUtils.getNowDate());
         return partnerMapper.insertPartner(partner);
     }
@@ -73,6 +74,7 @@ public class PartnerServiceImpl implements IPartnerService
     public int updatePartner(Partner partner)
     {
         partner.setUpdateTime(DateUtils.getNowDate());
+        partner.setUpdateBy(SecurityUtils.getUsername());
         return partnerMapper.updatePartner(partner);
     }
 

@@ -6,6 +6,7 @@ import com.dkd.manage.domain.OrderCollect;
 import com.dkd.manage.domain.dto.DailyTurnoverDto;
 import com.dkd.manage.domain.dto.OrderCollectDto;
 import com.dkd.manage.domain.dto.OrderCollectQuery;
+import com.dkd.manage.domain.dto.RegionSalesDto;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -63,4 +64,11 @@ public interface OrderCollectMapper
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
+    /**
+     * 销售额分布统计
+     */
+    List<RegionSalesDto> selectRegionSalesList(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }

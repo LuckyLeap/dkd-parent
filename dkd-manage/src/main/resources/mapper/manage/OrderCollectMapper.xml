@@ -101,8 +101,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         group by partner_id
     </select>
 
-    <select id="selectDailyTurnoverList" parameterType="java.time.LocalDateTime" resultType="DailyTurnoverDto">
-        select order_date, sum(order_total_money) as sum , count(order_count) as count
+    <select id="selectDailyTurnoverList" resultType="DailyTurnoverDto">
+        select order_date, sum(order_total_money) as sum
         from tb_order_collect
         <where>
             <if test="startDate != null">
@@ -113,5 +113,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
         </where>
         GROUP BY order_date
+    </select>
+
+    <select id="selectRegionSalesList" resultType="RegionSalesDto">
+        select region_name, sum(order_total_money) as sum
+        from tb_order_collect
+        <where>
+            <if test="startDate != null">
+                AND order_date &gt;= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND order_date &lt;= #{endDate}
+            </if>
+        </where>
+        GROUP BY region_name
     </select>
 </mapper>

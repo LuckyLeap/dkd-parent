@@ -42,14 +42,6 @@ public interface RegionMapper
     int updateRegion(Region region);
 
     /**
-     * 删除区域管理
-     * 
-     * @param id 区域管理主键
-     * @return 结果
-     */
-    int deleteRegionById(Long id);
-
-    /**
      * 批量删除区域管理
      * 
      * @param ids 需要删除的数据主键集合

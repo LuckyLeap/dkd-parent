@@ -2,6 +2,7 @@ package com.dkd.manage.mapper;
 
 import java.util.List;
 import com.dkd.manage.domain.Partner;
+import com.dkd.manage.domain.dto.PartnerNodeCountDto;
 import com.dkd.manage.domain.vo.PartnerVo;
 
 /**
@@ -63,4 +64,10 @@ public interface PartnerMapper
      * @return partnerVo集合
      */
     List<PartnerVo> selectPartnerVoList(Partner partner);
+
+    /**
+     * 查询合作商点位数 Top 5
+     * @return partnerNodeCountDto集合
+     */
+    List<PartnerNodeCountDto> getPartnerSalesList();
 }
