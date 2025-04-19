@@ -52,6 +52,12 @@ public class SysLogininfor extends BaseEntity
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
+    /** 用户Id */
+    private Long userId;
+
+    /** 部门Id */
+    private Long deptId;
+
     public Long getInfoId()
     {
         return infoId;
@@ -140,5 +146,21 @@ public class SysLogininfor extends BaseEntity
     public void setLoginTime(Date loginTime)
     {
         this.loginTime = loginTime;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 }

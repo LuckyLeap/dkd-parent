@@ -1,6 +1,10 @@
 package com.dkd.framework.manager.factory;
 
 import java.util.TimerTask;
+
+import com.dkd.common.core.domain.entity.SysUser;
+import com.dkd.system.service.ISysUserOnlineService;
+import com.dkd.system.service.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.dkd.common.constant.Constants;
@@ -74,6 +78,15 @@ public class AsyncFactory
                 {
                     logininfor.setStatus(Constants.FAIL);
                 }
+
+                // 设置登录用户的Id和部门Id
+                SysUser sysUser = SpringUtils.getBean(ISysUserService.class).selectUserByUserName(username);
+                if (sysUser != null)
+                {
+                    logininfor.setUserId(sysUser.getUserId());
+                    logininfor.setDeptId(sysUser.getDeptId());
+                }
+
                 // 插入数据
                 SpringUtils.getBean(ISysLogininforService.class).insertLogininfor(logininfor);
             }
